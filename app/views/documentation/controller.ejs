@@ -1,0 +1,32 @@
+<div class="page-header"><h2><%- currentApp.app.path() %><span style="color: grey">/app/controllers/</span><%- className %></h2></div>
+
+<% docs.forEach(function(doc) { %>
+    <div style="margin: 10px; padding: 10px; background: #fefefa; border: 1px solid #eee; border-radius: 10px;">
+        <h3><%- doc.ctx && doc.ctx.string %></h3>
+        <blockquote>
+            <%- doc.description.full %>
+        </blockquote>
+        <div style="padding: 10px;">
+        <% if (doc.route) { %>
+        <strong>@route</strong>
+        <strong><%- doc.route.method.toUpperCase() %></strong>
+        <span style="color:blue; text-decoration: underline"><%- currentApp.app.path() + doc.route.path %></span>
+        <% } %>
+        <% doc.tags.forEach(function(tag) { %>
+            <% if (tag.type) { %>
+            <div>
+                <strong>@<%- tag.type %></strong>
+                <% if (tag.types) { %>
+                <span style="color: grey; font-style: italic">
+                    {<%- tag.types.join(', ') %>}
+                </span>
+                <% } %>
+                <code>:<%- tag.name %></code> <%- tag.description %>
+            </div>
+            <% } %>
+        <% }) %>
+        </div>
+        <a class="btn" onclick="$(this).next('pre').toggle()"><i class="icon-hand-down"></i>Toggle source</a>
+        <pre style="display: none; margin-top: 10px;"><code><%- doc.code %></code></pre>
+    </div>
+<% }) %>
