@@ -16,6 +16,7 @@ var app = module.exports = function getServerInstance(params) {
 module.exports.init = function(c) {
     c.once('ready', function() {
         var app = module.exports();
+        c = c.parent || c;
         c.injectMiddlewareAt(1, '/docs', app);
         app.parent = c.app;
         app.route = '/docs';
