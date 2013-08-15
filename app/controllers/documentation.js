@@ -51,3 +51,7 @@ DocumentationController.prototype.model = function(c) {
     });
     c.render();
 };
+
+DocumentationController.prototype.index = function(c) {
+    c.render();
+};

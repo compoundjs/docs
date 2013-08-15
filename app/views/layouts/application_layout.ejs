@@ -7,6 +7,37 @@
         <%- csrfMetaTag() %>
         <meta charset="utf8">
         <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+        <style>
+          .sidenav i {
+            float: right;
+            margin-top: 2px;
+            margin-right: -6px;
+          }
+          .sidenav > li.nav-header {
+            background-color: #eee;
+          }
+          .sidenav > li.nav-header,
+          .sidenav > li > a {
+            display: block;
+            margin: 0 0 -1px;
+            padding: 8px 14px;
+            border: 1px solid #e5e5e5;
+          }
+          .sidenav > li.nav-header:first-child,
+          .sidenav > li:first-child > a {
+            -webkit-border-radius: 6px 6px 0 0;
+            -moz-border-radius: 6px 6px 0 0;
+            border-radius: 6px 6px 0 0;
+          }
+          .sidenav > li:last-child > a {
+            -webkit-border-radius: 0 0 6px 6px;
+            -moz-border-radius: 0 0 6px 6px;
+            border-radius: 0 0 6px 6px;
+          }
+          .sidenav {
+            padding: 0;
+          }
+        </style>
     </head>
     <body>
         <div class="navbar">
@@ -54,7 +85,27 @@
                 </div>
             <% }; %>
 
-            <%- body %>
+            <div class="row">
+                <div class="span3">
+                    <ul class="nav nav-list sidenav">
+                        <% controllers.forEach(function(controller, i) { %>
+                        <% if (i === 0 || controllers[i-1].path !== controller.path) { %>
+                        <li class="nav-header">controllers <span style="color:#000"><%- controller.path || '/' %></span></li>
+                        <% } %>
+                        <li class="<%- fileType === 'controller' && controller.name === fileName && controller.path === currentApp.app.path() ? 'active' : '' %>"><%- linkTo(controller.className, '/docs/controllers/' + controller.path.replace(/\//g, '-') + ':' + controller.name) %></li>
+                        <% }) %>
+                        <% models.forEach(function(model, i) { %>
+                        <% if (i === 0 || models[i-1].path !== model.path) { %>
+                        <li class="nav-header">models <span class="color:#000"><%- model.path || '/' %></span></li>
+                        <% } %>
+                        <li class="<%- fileType === 'model' && model.name === fileName && controller.path === currentApp.app.path() ? 'active' : '' %>"><%- linkTo(model.name, '/docs/models/' + model.path.replace(/\//g, '-') + ':' + model.name) %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+                <div class="span9">
+                    <%- body %>
+                </div>
+            </div>
 
             <hr />
             <footer>

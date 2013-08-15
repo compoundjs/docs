@@ -15,8 +15,9 @@ function ApplicationController(init) {
         }
         c.locals.className = '';
         c.locals.fileType = 'controller';
-        c.locals.fileName = c.params.name.split(':')[1]
-        c.locals.appRoute = c.params.name.split(':')[0].replace(/-/g, '/');
+        var name = c.params.name || ':';
+        c.locals.fileName = name.split(':')[1]
+        c.locals.appRoute = name.split(':')[0].replace(/-/g, '/');
         c.locals.currentApp = c.locals.rootApp;
         loadStructure(c.locals.rootApp);
 
