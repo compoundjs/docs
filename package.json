@@ -27,6 +27,16 @@
     "co-generators": "*"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --require test/init.js test/*/*.test.js"
-  }
+    "test": "./node_modules/.bin/mocha --require test/init.js test/*/*.test.js",
+    "start": "node server.js"
+  },
+  "readme": "### Welcome to CompoundJS ###",
+  "readmeFilename": "README.md",
+  "description": "",
+  "_id": "co-docs@0.0.1-2",
+  "dist": {
+    "shasum": "abc6c9ac19187151b26d9207d908ca8328b481b8"
+  },
+  "_from": "https://github.com/inventures/docs/tarball/master",
+  "_resolved": "https://github.com/inventures/docs/tarball/master"
 }

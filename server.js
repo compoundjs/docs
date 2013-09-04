@@ -14,12 +14,13 @@ var app = module.exports = function getServerInstance(params) {
 };
 
 module.exports.init = function(c) {
+    // setup co-docs
     c.once('ready', function() {
         var app = module.exports();
         c = c.parent || c;
-        c.injectMiddlewareAt(1, '/docs', app);
+        c.injectMiddlewareAt(1, c.app.get('docs route') || '/docs', app);
         app.parent = c.app;
-        app.route = '/docs';
+        app.route = c.app.get('docs route') || '/docs';
         app.emit('mount', c.app);
     });
 };
