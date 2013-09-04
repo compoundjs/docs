@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = ApplicationController;
 
 function ApplicationController(init) {
@@ -6,9 +8,13 @@ function ApplicationController(init) {
     });
 
     init.before(function makeTree(c) {
+        var whitelist = c.app.get('docs whitelist');
+        whitelist = whitelist && new RegExp(whitelist);
+
         this.title = 'Documentation';
         c.locals.controllers = [];
         c.locals.models = [];
+        c.locals.docsPath = c.app.get('docs route') || '/docs';
         c.locals.rootApp = c.compound;
         if (c.locals.rootApp.parent) {
             c.locals.rootApp = c.locals.rootApp.parent;
@@ -27,9 +33,8 @@ function ApplicationController(init) {
             }
             var cc = compound.structure.paths.controllers;
             var ccc = compound.structure.controllers;
-            console.log(cc);
+            
             Object.keys(cc).forEach(function(ctl) {
-                console.log(ctl);
                 var className = ccc[ctl].name;
 
                 if (!className) {
@@ -38,21 +43,42 @@ function ApplicationController(init) {
                 if (ctl === c.locals.fileName) {
                     c.locals.className = className;
                 }
-                c.locals.controllers.push({
+                
+                var controller = {
                     path: compound.app.path(),
                     name: ctl,
                     className: className
-                });
+                };
+
+                // exclude the documentation controllers
+                if (controller.path === (c.app.get('docs route') || '/docs')) {
+                    return;
+                }
+
+                // check vs whitelist
+                if (whitelist && !whitelist.test(path.join('controllers', controller.path, controller.name))) {
+                    return;
+                }
+
+                c.locals.controllers.push(controller);
             });
             var cmd = compound.structure.paths.models;
-            Object.keys(cmd).forEach(function(model) {
-                c.locals.models.push({
+            Object.keys(cmd).forEach(function(modelName) {
+                var model = {
                     path: compound.app.path(),
-                    name: model
-                });
-                if (model === c.locals.fileName) {
-                    c.locals.className = model;
+                    name: modelName
+                };
+
+                // check vs whitelist
+                if (whitelist && !whitelist.test(path.join('models', model.path, model.name))) {
+                    return;
                 }
+
+                if (modelName === c.locals.fileName) {
+                    c.locals.className = modelName;
+                }
+
+                c.locals.models.push(model);
             });
             compound.elements.forEach(function(el) {
                 loadStructure(el);
